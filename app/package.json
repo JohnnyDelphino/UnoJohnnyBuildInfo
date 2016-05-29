@@ -1,0 +1,13 @@
+{
+  "name": "UnoJohnnyBuildInfo",
+  "description": "A project to visualize TeamCity-Build-States",
+  "version": "0.1.0",
+  "author": "Christian Schaefer <contact@csdev.it>",
+
+  "dependencies": {
+    "johnny-five": "latest"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  }
+}
