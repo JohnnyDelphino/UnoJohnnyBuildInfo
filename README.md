@@ -9,12 +9,16 @@ This project will be documented (in german) and discussed on my Blog: [csdev.it]
 
 # Install Dependencies
 
-to try out the scripts you need to have installed Node.js and NPM. After checking out this repo move to the app-folder and install all required dependencies.
+To try out the scripts you need to have installed Node.js and NPM. After checking out this repo move to the app-folder and install all required dependencies.
 
 ```bash
 cd app/
 npm install
 ```
+
+# Arduino requirements
+
+Due to the reason the Arduino only acts passive and reacts to serial input. It needs to implement the **Firmata**-Protocol. You can simply flash it from your Arduino IDE. Go to File > Examples > Firmata > StandardFirmata to open the Sourcecode. After opening flash it to your connected Arduino.
 
 # Start script
 
