@@ -18,7 +18,7 @@ npm install
 
 # Arduino requirements
 
-Due to the reason the Arduino only acts passive and reacts to serial input. It needs to implement the **Firmata**-Protocol. You can simply flash it from your Arduino IDE. Go to File > Examples > Firmata > StandardFirmata to open the Sourcecode. After opening flash it to your connected Arduino.
+Due to the reason the Arduino only acts passive and reacts to serial input it needs to implement the **Firmata**-Protocol. You can simply flash it from your Arduino IDE. Go to File > Examples > Firmata > StandardFirmata to open the Sourcecode. After opening flash it to your connected Arduino.
 
 # Start script
 
