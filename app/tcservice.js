@@ -1,3 +1,9 @@
+// Why Javascript?
+// Atwood's Law: Any application that can be written in Javascript, will eventually be written in Javascript.
+// - Jeff Atwood, July 17, 2007
+//
+// Copyright 2016 Christian Schäfer
+
 // ################### dependencies #############################
 var https = require('https');
 var fs = require("fs");
@@ -34,17 +40,31 @@ var BUILDSTATE = -1 // 0 = red/failure, 1 = yellow/running, 2 = green/success
 // ################### johnny-five / Arduino Prep #############################
 var board = new five.Board();
 var greenLamp,yellowLamp,redLamp;
-var state = 0x00;
+const GREENPIN = 13;
+const YELLOWPIN = 12;
+const REDPIN = 11;
+
+var runningLoop = false;
 
 var initLamps = function(){
-  greenLamp = new five.Pin(13);
-  yellowLamp = new five.Pin(12);
-  redLamp = new five.Pin(11);
+  greenLamp = new five.Pin(GREENPIN);
+  yellowLamp = new five.Pin(YELLOWPIN);
+  redLamp = new five.Pin(REDPIN);
+
+  var runningState = 0;
+
+  board.loop(500, function(){
+    if (runningLoop == true){
+      board.digitalWrite(YELLOWPIN, (runningState = runningState ? 0 : 1));
+    } else {
+      board.digitalWrite(YELLOWPIN, 0);
+    }
+  });
 }
 
 var switchOffAllLights = function(){
   greenLamp.low();
-  yellowLamp.low();
+  runningLoop = false;
   redLamp.low();
 }
 
@@ -85,10 +105,7 @@ var animateSuccess = function(){
 var animateRunning = function(){
   console.log("RUNNING");
   switchOffAllLights();
-  // blinking animation
-  board.loop(500, function() {
-    yellowLamp.write(state ^= 0x01);
-  });
+  runningLoop = true;
 };
 
 var animateFailure = function(){
