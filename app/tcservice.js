@@ -199,9 +199,9 @@ var fetchRunningBuilds = function(){
 };
 
 // ################### Lifecycle #############################
-console.log("Started Script");
-
 board.on("ready", function() {
+  console.log("Started Script to observe Project: " + tcProject);
+
   // board needs to be ready before initializing components
   initLamps();
 
