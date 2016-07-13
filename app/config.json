@@ -3,6 +3,6 @@
   "teamcityPort" : "443",
   "teamcityUser" : "guest",
   "teamcityPassword" : "",
-  "tcProject" : "Checkstyle",
+  "tcProject" : "Kotlin",
   "tcPollingIntervalInSeconds" : 15
 }

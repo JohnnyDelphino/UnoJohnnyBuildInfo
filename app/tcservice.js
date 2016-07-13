@@ -1,11 +1,9 @@
-// dependencies
+// ################### dependencies #############################
 var https = require('https');
-// requests serial or in parrallel
-var async = require('async');
-var util = require('util');
 var fs = require("fs");
+var five = require("johnny-five");
 
-// read configuration sync
+// ################### init configuration #############################
 var configJSON = fs.readFileSync("config.json");
 var config = JSON.parse(configJSON);
 var teamcityHost = config.teamcityHost;
@@ -29,10 +27,28 @@ if (tcUser == "guest"){
   latestBuildEndpoint = '/app/rest/builds/?locator='+'project:' + tcProject + ',' + 'count:1';
 }
 
-// STATES
+// ################### STATES #############################
 var FETCHING_BUILD_CONFIGURATIONS = false;
 var BUILDSTATE = -1 // 0 = red/failure, 1 = yellow/running, 2 = green/success
 
+// ################### johnny-five / Arduino Prep #############################
+var board = new five.Board();
+var greenLamp,yellowLamp,redLamp;
+var state = 0x00;
+
+var initLamps = function(){
+  greenLamp = new five.Pin(13);
+  yellowLamp = new five.Pin(12);
+  redLamp = new five.Pin(11);
+}
+
+var switchOffAllLights = function(){
+  greenLamp.low();
+  yellowLamp.low();
+  redLamp.low();
+}
+
+// ################### HTTP-Config #############################
 var getHttpOptions = function(endpoint){
   if(tcUser == "guest"){
     return {
@@ -58,16 +74,27 @@ var getHttpOptions = function(endpoint){
   }
 };
 
+// ################### Animation / Visualization #############################
+
 var animateSuccess = function(){
   console.log("SUCCESS");
+  switchOffAllLights();
+  greenLamp.high();
 };
 
 var animateRunning = function(){
   console.log("RUNNING");
+  switchOffAllLights();
+  // blinking animation
+  this.loop(500, function() {
+    yellowLamp.write(state ^= 0x01);
+  });
 };
 
 var animateFailure = function(){
   console.log("FAILURE");
+  switchOffAllLights();
+  redLamp.high();
 };
 
 var visualizeCurrentState = function(newState){
@@ -92,6 +119,8 @@ var visualizeCurrentState = function(newState){
   };
 };
 
+// ################### Networking-Functions #############################
+
 var fetchLatestBuild = function(){
   console.log("fetchLatestBuild() called");
   var httpOptions = getHttpOptions(latestBuildEndpoint);
@@ -106,14 +135,13 @@ var fetchLatestBuild = function(){
           var data = JSON.parse(content);
           // check if you got one result
           if(data.count == 1){
-            // console.log(util.inspect(data.build[0]));
             var build = data.build[0];
 
             switch (build.status) {
               case "FAILURE":
                 {
-                    // BUILDSTATE = 0;
-                    visualizeCurrentState(0);
+                  // BUILDSTATE = 0;
+                  visualizeCurrentState(0);
                 }
                 break;
               case "SUCCESS":
@@ -142,7 +170,6 @@ var fetchLatestBuild = function(){
 var fetchRunningBuilds = function(){
   console.log("fetchRunningBuilds() called");
     var httpOptions = getHttpOptions(runningBuildsEndpoint);
-    // console.log(util.inspect(httpOptions));
     var request = https.request(httpOptions, function(response) {
         var content = "";
         // Handle data chunks
@@ -153,7 +180,6 @@ var fetchRunningBuilds = function(){
         response.on('end', function() {
           // console.log(content);
             var data = JSON.parse(content);
-            // console.log(util.inspect(data));
             var runningBuildCount = data.count;
             // check if builds are running
             if(runningBuildCount!=0){
@@ -172,9 +198,15 @@ var fetchRunningBuilds = function(){
     request.end();
 };
 
+// ################### Lifecycle #############################
 console.log("Started Script");
 
-// Repeating Poll
-setInterval(function () {
-  fetchRunningBuilds();
-}, tcPollingInterval);
+board.on("ready", function() {
+  // board needs to be ready before initializing components
+  initLamps();
+
+  // Repeating Poll
+  setInterval(function () {
+    fetchRunningBuilds();
+  }, tcPollingInterval);
+});
