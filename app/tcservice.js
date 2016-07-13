@@ -86,7 +86,7 @@ var animateRunning = function(){
   console.log("RUNNING");
   switchOffAllLights();
   // blinking animation
-  this.loop(500, function() {
+  board.loop(500, function() {
     yellowLamp.write(state ^= 0x01);
   });
 };
