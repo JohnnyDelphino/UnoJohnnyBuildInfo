@@ -1,0 +1,8 @@
+{
+  "teamcityHost" : "teamcity.jetbrains.com",
+  "teamcityPort" : "443",
+  "teamcityUser" : "guest",
+  "teamcityPassword" : "",
+  "tcProject" : "Checkstyle",
+  "tcPollingIntervalInSeconds" : 15
+}

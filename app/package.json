@@ -5,7 +5,9 @@
   "author": "Christian Schaefer <contact@csdev.it>",
 
   "dependencies": {
-    "johnny-five": "latest"
+    "johnny-five": "latest",
+    "async" : "latest",
+    "util" : "latest"
   },
   "engines": {
     "node": ">=0.10.0"
