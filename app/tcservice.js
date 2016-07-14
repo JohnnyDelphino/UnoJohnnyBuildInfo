@@ -239,7 +239,10 @@ board.on("ready", function() {
   // board needs to be ready before initializing components
   initLamps();
 
-  // Repeating Poll
+  // start fetching
+  fetchRunningBuilds();
+
+  // looped fetching
   setInterval(function () {
     fetchRunningBuilds();
   }, tcPollingInterval);
