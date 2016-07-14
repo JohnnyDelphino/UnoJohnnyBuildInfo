@@ -4,5 +4,7 @@
   "teamcityUser" : "guest",
   "teamcityPassword" : "",
   "tcProject" : "Kotlin",
+  "observeSingleBuildType" : true,
+  "tcBuildType" : "bt384",
   "tcPollingIntervalInSeconds" : 15
 }

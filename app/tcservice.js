@@ -5,7 +5,7 @@
 // Copyright 2016 Christian Schäfer
 
 // ################### dependencies #############################
-var https = require('https');
+var http = require('http');
 var fs = require("fs");
 var five = require("johnny-five");
 
@@ -19,18 +19,35 @@ var tcUser = config.teamcityUser;
 var tcPW = config.teamcityPassword;
 var tcPollingInterval = config.tcPollingIntervalInSeconds * 1000;
 
+var observeSingleBuildType = config.observeSingleBuildType; // boolean that indicates if only a single buildType should be polled (instead of all BuildTypes of Project)
+var tcBuildType = config.tcBuildType; // the single buildType to observe
+
 var runningBuildsEndpoint = "";
 if (tcUser == "guest"){
   runningBuildsEndpoint = '/guestAuth/app/rest/builds/?locator='+'project:' + tcProject + ',' + 'running:true';
+  // override Endpoint if just a single BuildConfig should be observed instead of whole project
+  if (observeSingleBuildType == true){
+    runningBuildsEndpoint = '/guestAuth/app/rest/builds/?locator='+'buildType:' + tcBuildType + ',' + 'running:true';
+  }
 } else {
   runningBuildsEndpoint = '/app/rest/builds/?locator='+'project:' + tcProject + ',' + 'running:true';
+  // override Endpoint if just a single BuildConfig should be observed instead of whole project
+  if (observeSingleBuildType == true){
+    runningBuildsEndpoint = '/app/rest/builds/?locator='+'buildType:' + tcBuildType + ',' + 'running:true';
+  }
 }
 
 var latestBuildEndpoint = "";
 if (tcUser == "guest"){
   latestBuildEndpoint = '/guestAuth/app/rest/builds/?locator='+'project:' + tcProject + ',' + 'count:1';
+  if (observeSingleBuildType == true){
+    latestBuildEndpoint = '/guestAuth/app/rest/builds/?locator='+'buildType:' + tcBuildType + ',' + 'count:1';
+  }
 } else {
   latestBuildEndpoint = '/app/rest/builds/?locator='+'project:' + tcProject + ',' + 'count:1';
+  if (observeSingleBuildType == true){
+    latestBuildEndpoint = '/app/rest/builds/?locator='+'buildType:' + tcBuildType + ',' + 'count:1';
+  }
 }
 
 // ################### STATES #############################
@@ -141,7 +158,7 @@ var visualizeCurrentState = function(newState){
 var fetchLatestBuild = function(){
   console.log("fetchLatestBuild() called");
   var httpOptions = getHttpOptions(latestBuildEndpoint);
-  var request = https.request(httpOptions, function(response) {
+  var request = http.request(httpOptions, function(response) {
       var content = "";
       // Handle data chunks
       response.on('data', function(chunk) {
@@ -187,7 +204,7 @@ var fetchLatestBuild = function(){
 var fetchRunningBuilds = function(){
   console.log("fetchRunningBuilds() called");
     var httpOptions = getHttpOptions(runningBuildsEndpoint);
-    var request = https.request(httpOptions, function(response) {
+    var request = http.request(httpOptions, function(response) {
         var content = "";
         // Handle data chunks
         response.on('data', function(chunk) {
