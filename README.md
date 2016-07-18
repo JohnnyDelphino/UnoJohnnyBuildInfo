@@ -24,5 +24,5 @@ Due to the reason the Arduino only acts passive and reacts to serial input it ne
 
 ```bash
 cd app/
-node tcpoll.js
+node tcservice.js
 ```
