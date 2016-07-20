@@ -37,22 +37,14 @@ Due to the reason the Arduino only acts passive and reacts to serial input it ne
 
 The config.json allows you to configure your individual TeamCity-Server you want to connect to. The following parameters are implemented at the moment:
 
-**teamcityHost**
-* the url of your TeamCity-Server
-**teamcityPort**
-* the port of your TeamCity-Server 
-**teamcityUser**
-* the user to authenticate against the TC-Server, you can put "guest" here if your TC-Config allows Guest-Access
-**teamcityPassword**
-* the password of TC-User above. In case of "guest" not needed (leave empty)
-**tcProject**
-* Set a TeamCity project to observe all BuildConfigurations of it
-**observeSingleBuildType**
-* if you want to select a single TC-BuildConfig instead of all BuildConfigs in a project set this to true and add the BuildTypeID in the next param
-**tcBuildType**	
-* the BuildTypeID of the single BuildConfig you want to observe
-**tcPollingIntervalInSeconds**
-* the interval in that the status is polled regularly
+**teamcityHost** - the url of your TeamCity-Server
+**teamcityPort** - the port of your TeamCity-Server 
+**teamcityUser** - the user to authenticate against the TC-Server, you can put "guest" here if your TC-Config allows Guest-Access
+**teamcityPassword** - the password of TC-User above. In case of "guest" not needed (leave empty)
+**tcProject** - Set a TeamCity project to observe all BuildConfigurations of it
+**observeSingleBuildType** - if you want to select a single TC-BuildConfig instead of all BuildConfigs in a project set this to true and add the BuildTypeID in the next param
+**tcBuildType**	- the BuildTypeID of the single BuildConfig you want to observe
+**tcPollingIntervalInSeconds** -  the interval in that the status is polled regularly
 
 # Start script
 
